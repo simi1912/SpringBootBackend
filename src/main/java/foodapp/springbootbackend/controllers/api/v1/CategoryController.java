@@ -1,29 +1,60 @@
 package foodapp.springbootbackend.controllers.api.v1;
 
 import foodapp.springbootbackend.model.Category;
-import foodapp.springbootbackend.services.data.CategoryService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import foodapp.springbootbackend.services.data.CategoryRepositoryService;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1")
 public class CategoryController {
 
-    private CategoryService categoryService;
+    private final CategoryRepositoryService categoryRepositoryService;
 
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
+    public CategoryController(CategoryRepositoryService categoryRepositoryService) {
+        this.categoryRepositoryService = categoryRepositoryService;
     }
 
     @GetMapping("/categories")
     public List<Category> getAllCategory(){
-        Category soupCategory = new Category(10l, "soupCategory");
-        categoryService.save(soupCategory);
+        return categoryRepositoryService.getAllCategories();
+    }
 
-        return categoryService.getAllCategories();
+    @PostMapping("/categories")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Category createNewCategory(@RequestBody Category newCategory){
+        return categoryRepositoryService.save(newCategory);
+    }
+
+    @GetMapping("/categories/{categoryId}")
+    public Category getCategoryById(@PathVariable Long categoryId){
+        Optional<Category> optionalCategory =
+                categoryRepositoryService.getCategoryById(categoryId);
+        return optionalCategory.orElseThrow(RuntimeException::new);
+    }
+
+    @Transactional
+    @PutMapping("/categories/{categoryId}")
+    public Category updateCategory(@PathVariable Long categoryId,
+                                    @RequestBody Category updatedCategory){
+        if(!categoryRepositoryService.existsCategoryWithId(categoryId))
+            new RuntimeException();
+
+        updatedCategory.setId(categoryId);
+        return categoryRepositoryService.save(updatedCategory);
+    }
+
+    @Transactional
+    @DeleteMapping("/categories/{categoryId}")
+    public void deleteCategory(@PathVariable Long categoryId){
+        if(!categoryRepositoryService.existsCategoryWithId(categoryId))
+            new RuntimeException();
+
+        categoryRepositoryService.deleteCategory(categoryId);
     }
 
 }
