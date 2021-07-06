@@ -9,8 +9,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Data
@@ -22,8 +20,8 @@ public class MenuItem {
     @GeneratedValue
     private Long id;
 
-    @ManyToMany()
-    private List<Category> categories = new ArrayList<>();
+    @ManyToOne()
+    private Category category;
 
     @NotBlank
     private String name;

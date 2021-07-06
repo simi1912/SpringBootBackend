@@ -1,22 +1,24 @@
 package foodapp.springbootbackend.services.data;
 
 import foodapp.springbootbackend.model.MenuItem;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
-@Service
-public interface MenuRepositoryService extends CrudRepository<MenuItem, Long> {
+@Repository
+public interface MenuRepositoryService extends JpaRepository<MenuItem, Long>, MenuCustomQueries {
 
-    @Query( value =
-            "Select * " +
-                "from Menu_Item ",
-            nativeQuery = true)
-    List<MenuItem> getAllCategories();
+//    @Query( value =
+//            "SELECT * " +
+//            "FROM Menu_Item " +
+//            "WHERE name LIKE :menuItemNameSearchQuery OR " +
+//                "description LIKE :menuItemDescriptionSearchQuery ",
+//            nativeQuery = true)
+//    List<MenuItem> getMenuItemNameLike(String menuItemNameSearchQuery,
+//                                       String menuItemDescriptionSearchQuery);
 
     @Query( value =
                 "SELECT * " +
@@ -37,9 +39,9 @@ public interface MenuRepositoryService extends CrudRepository<MenuItem, Long> {
             "SELECT " +
                 "CASE " +
                     "WHEN EXISTS ( " +
-                    "SELECT * " +
-                    "FROM Menu_Item " +
-                    "WHERE id = :menuItemID" +
+                        "SELECT * " +
+                        "FROM Menu_Item " +
+                        "WHERE id = :menuItemID" +
                     ") THEN true " +
                 "ELSE false " +
                 "END ",

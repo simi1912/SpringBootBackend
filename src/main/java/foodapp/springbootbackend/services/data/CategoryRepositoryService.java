@@ -37,13 +37,13 @@ public interface CategoryRepositoryService extends CrudRepository<Category, Long
             "SELECT " +
                 "CASE " +
                     "WHEN EXISTS ( " +
-                    "SELECT *" +
-                    "FROM Category " +
-                    "WHERE id = :menuItemID " +
+                        "SELECT *" +
+                        "FROM Category " +
+                        "WHERE id = :categoryId " +
                     ") THEN true " +
                 "ELSE false " +
                 "END ",
             nativeQuery = true)
-    boolean existsCategoryWithId(Long menuItemID);
+    boolean existsCategoryWithId(Long categoryId);
 
 }

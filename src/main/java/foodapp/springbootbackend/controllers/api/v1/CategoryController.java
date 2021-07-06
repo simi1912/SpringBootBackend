@@ -42,7 +42,7 @@ public class CategoryController {
     public Category updateCategory(@PathVariable Long categoryId,
                                     @RequestBody Category updatedCategory){
         if(!categoryRepositoryService.existsCategoryWithId(categoryId))
-            new RuntimeException();
+            throw new RuntimeException();
 
         updatedCategory.setId(categoryId);
         return categoryRepositoryService.save(updatedCategory);
@@ -52,7 +52,7 @@ public class CategoryController {
     @DeleteMapping("/categories/{categoryId}")
     public void deleteCategory(@PathVariable Long categoryId){
         if(!categoryRepositoryService.existsCategoryWithId(categoryId))
-            new RuntimeException();
+            throw new RuntimeException();
 
         categoryRepositoryService.deleteCategory(categoryId);
     }

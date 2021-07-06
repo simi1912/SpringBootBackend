@@ -20,8 +20,19 @@ public class MenuController {
     }
 
     @GetMapping("/menuItems")
-    public List<MenuItem> getMenuItems(){
-        return menuRepositoryService.getAllCategories();
+    public List<MenuItem> getMenuItems(
+            @RequestParam(value = "name", required = false, defaultValue = "")
+                    String menuItemNameSearchQuery,
+            @RequestParam(value = "description", required = false, defaultValue = "")
+                    String menuItemDescriptionSearchQuery,
+            @RequestParam(value = "category", required = false, defaultValue = "")
+                    String categoriesSearchQuery){
+
+        return menuRepositoryService.getMenuItemsLike(
+                menuItemNameSearchQuery,
+                menuItemDescriptionSearchQuery,
+                categoriesSearchQuery
+                );
     }
 
     @PostMapping("/menuItems")
